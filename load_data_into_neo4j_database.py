@@ -16,7 +16,6 @@ with driver.session() as session:
 
 print('done')
 
-
 print('Inserting stations')
 
 query = '''
