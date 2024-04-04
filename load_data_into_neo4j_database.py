@@ -63,7 +63,7 @@ print('Inserting liaisons')
 query = '''
 LOAD CSV WITH HEADERS FROM 'https://raw.githubusercontent.com/pauldechorgnat/cool-datasets/master/ratp/liaisons.csv' AS row
 MATCH (l:Liaison) WHERE l.start = row.start
-MATCH (s:Movie) WHERE s.nom_clean = row.nom_clean
+MATCH (s:Station) WHERE s.nom_clean = row.nom_clean
 CREATE (l)-[:APPEAR_IN]->(s);
 '''
 
