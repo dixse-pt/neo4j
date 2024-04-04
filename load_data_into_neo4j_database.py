@@ -92,8 +92,8 @@ print('done')
 # ]
 
 # Utilisation d'une transaction pour exécuter chaque requête
-with driver.session() as session:
-    for query in queries:
-        print(query)
-        session.run(query)
-print('done')
+# with driver.session() as session:
+#     for query in queries:
+#         print(query)
+#         session.run(query)
+# print('done')
