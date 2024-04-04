@@ -59,6 +59,7 @@ print('done')
 
 print('Inserting relationship')
 query = '''
+LOAD CSV WITH HEADERS FROM 'https://github.com/pauldechorgnat/cool-datasets/raw/master/ratp/stations.csv' AS row
 MATCH (s1:Station {nomGare: s1.nameUppercase})
 MATCH (s2:Station {nomGare: s2.nameUppercase})
 WHERE s1.nameUppercase <> s2.nameUppercase AND s1.ligne = s2.ligne
