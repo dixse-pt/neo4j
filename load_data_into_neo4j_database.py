@@ -1,7 +1,6 @@
 from neo4j import GraphDatabase
 
-driver = GraphDatabase.driver('bolt://0.0.0.0:7687',
-                              auth=('neo4j', 'neo4j'))
+driver = GraphDatabase.driver('bolt://0.0.0.0:7687', auth=('neo4j', 'neo4j'))
 
 # deleting data
 print('Deleting previous data')
@@ -22,9 +21,7 @@ print('Inserting stations')
 
 query = '''
 LOAD CSV WITH HEADERS FROM 'https://github.com/pauldechorgnat/cool-datasets/raw/master/ratp/stations.csv' AS row
-CREATE (:Station { 
-    nom_gare: row.nom_gare
-    });
+CREATE (:Station { nom_gare: row.nom_gare });
 '''
 
 with driver.session() as session:
@@ -37,9 +34,7 @@ print('Inserting ligne')
 
 query = '''
 LOAD CSV WITH HEADERS FROM 'https://github.com/pauldechorgnat/cool-datasets/raw/master/ratp/stations.csv' AS row
-CREATE (:Ligne { 
-    ligne: toString(row.ligne)
-    });
+CREATE (:Ligne { ligne: toString(row.ligne)});
 '''
 
 with driver.session() as session:
