@@ -61,10 +61,10 @@ print('done')
 print('Inserting liaisons')
 
 query = '''
-LOAD CSV WITH HEADERS FROM 'https://github.com/pauldechorgnat/cool-datasets/raw/master/ratp/stations.csv' AS row
-MATCH (l:Start) WHERE l.name = row.character
-MATCH (m:Movie) WHERE m.id = row.tconst
-CREATE (c)-[:APPEAR_IN]->(m);
+LOAD CSV WITH HEADERS FROM 'https://raw.githubusercontent.com/pauldechorgnat/cool-datasets/master/ratp/liaisons.csv' AS row
+MATCH (l:Liaison) WHERE l.start = row.start
+MATCH (s:Movie) WHERE s.nom_clean = row.nom_clean
+CREATE (l)-[:APPEAR_IN]->(s);
 '''
 
 with driver.session() as session:
