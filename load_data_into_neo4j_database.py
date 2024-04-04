@@ -31,13 +31,13 @@ CREATE (:Station {
     ligne: toInteger(row.ligne)
 });
 
-# MATCH (s1:Station {nomGare: s1.nameUppercase})
-# MATCH (s2:Station {nomGare: s2.nameUppercase})
-# WHERE s1.nameUppercase <> s2.nameUppercase AND s1.ligne = s2.ligne
-# WITH s1, s2, point({latitude: s1.latitude, longitude: s1.longitude}) AS startPoint, point({latitude: s2.latitude, longitude: s2.longitude}) AS endPoint
-# WITH s1, s2, distance(startPoint, endPoint) / 1000 AS distanceKm
-# MERGE (s1)-[linked:LINKED]->(s2)
-# SET linked.distance = distanceKm
+MATCH (s1:Station {nomGare: s1.nameUppercase})
+MATCH (s2:Station {nomGare: s2.nameUppercase})
+WHERE s1.nameUppercase <> s2.nameUppercase AND s1.ligne = s2.ligne
+WITH s1, s2, point({latitude: s1.latitude, longitude: s1.longitude}) AS startPoint, point({latitude: s2.latitude, longitude: s2.longitude}) AS endPoint
+WITH s1, s2, distance(startPoint, endPoint) / 1000 AS distanceKm
+MERGE (s1)-[linked:LINKED]->(s2)
+SET linked.distance = distanceKm
 '''
 
 with driver.session() as session:
