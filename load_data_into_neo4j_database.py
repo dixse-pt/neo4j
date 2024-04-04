@@ -42,13 +42,7 @@ print('Inserting stations')
 
 query = '''
 LOAD CSV WITH HEADERS FROM 'https://github.com/pauldechorgnat/cool-datasets/raw/master/ratp/stations.csv' AS row
-CREATE (:Station { nom_clean: row.nom_clean,
-    nom_gare: row.nom_gare,
-    latitude: toFloat(row.x),
-    longitude: toFloat(row.y),
-    trafic: toInteger(row.Trafic),
-    ville: row.Ville,
-    ligne: toInteger(row.ligne)
+CREATE (:Ligne { ligne: toString(row.ligne)
 });
 '''
 
@@ -58,17 +52,17 @@ with driver.session() as session:
 
 print('done')
 
-print('Inserting liaisons')
+# print('Inserting liaisons')
 
-query = '''
-LOAD CSV WITH HEADERS FROM 'https://raw.githubusercontent.com/pauldechorgnat/cool-datasets/master/ratp/liaisons.csv' AS row
-MATCH (l:Liaison) WHERE l.start = row.start
-MATCH (s:Station) WHERE s.nom_clean = row.nom_clean
-CREATE (l)-[:APPEAR_IN]->(s);
-'''
+# query = '''
+# LOAD CSV WITH HEADERS FROM 'https://raw.githubusercontent.com/pauldechorgnat/cool-datasets/master/ratp/liaisons.csv' AS row
+# MATCH (l:Liaison) WHERE l.start = row.start
+# MATCH (s:Station) WHERE s.nom_clean = row.nom_clean
+# CREATE (l)-[:APPEAR_IN]->(s);
+# '''
 
-with driver.session() as session:
-    print(query)
-    session.run(query)
+# with driver.session() as session:
+#     print(query)
+#     session.run(query)
 
-print('done')
+# print('done')
