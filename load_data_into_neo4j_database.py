@@ -22,8 +22,9 @@ print('Inserting stations')
 
 query = '''
 LOAD CSV WITH HEADERS FROM 'https://github.com/pauldechorgnat/cool-datasets/raw/master/ratp/stations.csv' AS row
-CREATE (:Station { nom_gare: row.nom_gare,
-});
+CREATE (:Station { 
+    nom_gare: row.nom_gare
+    });
 '''
 
 with driver.session() as session:
@@ -36,8 +37,9 @@ print('Inserting ligne')
 
 query = '''
 LOAD CSV WITH HEADERS FROM 'https://github.com/pauldechorgnat/cool-datasets/raw/master/ratp/stations.csv' AS row
-CREATE (:Ligne { ligne: toString(row.ligne)
-});
+CREATE (:Ligne { 
+    ligne: toString(row.ligne)
+    });
 '''
 
 with driver.session() as session:
@@ -46,10 +48,11 @@ with driver.session() as session:
 
 print('done')
 
-print('creating connection')
+print('Creating connections')
 
 query = '''
-MATCH (l:Ligne) WHERE l.ligne = row.ligne
+LOAD CSV WITH HEADERS FROM 'https://github.com/pauldechorgnat/cool-datasets/raw/master/ratp/stations.csv' AS row
+MATCH (l:Ligne) WHERE l.ligne = toString(row.ligne)
 MATCH (s:Station) WHERE s.nom_gare = row.nom_gare
 CREATE (s)-[:DESSERVI_PAR]->(l);
 '''
