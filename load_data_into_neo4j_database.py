@@ -22,8 +22,8 @@ print('Inserting stations')
 
 query = '''
 LOAD CSV WITH HEADERS FROM 'https://github.com/pauldechorgnat/cool-datasets/raw/master/ratp/stations.csv' AS row
-CREATE (:Station { nameUppercase: row.nom_clean,
-    nomGare: row.nom_gare,
+CREATE (:Station { nom_clean: row.nom_clean,
+    nom_gare: row.nom_gare,
     latitude: toFloat(row.x),
     longitude: toFloat(row.y),
     trafic: toInteger(row.Trafic),
@@ -38,14 +38,16 @@ with driver.session() as session:
 
 print('done')
 
-
-
-print('Inserting liaisons')
+print('Inserting stations')
 
 query = '''
-LOAD CSV WITH HEADERS FROM 'https://github.com/pauldechorgnat/cool-datasets/raw/master/ratp/liaisons.csv' AS row
-CREATE (:Liaison { start: row.start,
-    stop: row.stop,
+LOAD CSV WITH HEADERS FROM 'https://github.com/pauldechorgnat/cool-datasets/raw/master/ratp/stations.csv' AS row
+CREATE (:Station { nom_clean: row.nom_clean,
+    nom_gare: row.nom_gare,
+    latitude: toFloat(row.x),
+    longitude: toFloat(row.y),
+    trafic: toInteger(row.Trafic),
+    ville: row.Ville,
     ligne: toInteger(row.ligne)
 });
 '''
@@ -56,17 +58,13 @@ with driver.session() as session:
 
 print('done')
 
+print('Inserting liaisons')
 
-print('Inserting relationship')
 query = '''
 LOAD CSV WITH HEADERS FROM 'https://github.com/pauldechorgnat/cool-datasets/raw/master/ratp/stations.csv' AS row
-MATCH (s1:Station {nomGare: s1.nameUppercase})
-MATCH (s2:Station {nomGare: s2.nameUppercase})
-WHERE s1.nameUppercase <> s2.nameUppercase AND s1.ligne = s2.ligne
-WITH s1, s2, point({latitude: s1.latitude, longitude: s1.longitude}) AS startPoint, point({latitude: s2.latitude, longitude: s2.longitude}) AS endPoint
-WITH s1, s2, distance(startPoint, endPoint) / 1000 AS distanceKm
-MERGE (s1)-[linked:LINKED]->(s2)
-SET linked.distance = distanceKm
+MATCH (l:Start) WHERE l.name = row.character
+MATCH (m:Movie) WHERE m.id = row.tconst
+CREATE (c)-[:APPEAR_IN]->(m);
 '''
 
 with driver.session() as session:
@@ -74,4 +72,3 @@ with driver.session() as session:
     session.run(query)
 
 print('done')
- 
