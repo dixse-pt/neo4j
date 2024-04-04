@@ -22,7 +22,7 @@ print('Inserting stations')
 
 query = '''
 LOAD CSV WITH HEADERS FROM 'https://github.com/pauldechorgnat/cool-datasets/raw/master/ratp/stations.csv' AS row
-CREATE (:Station {name: row.nom_clean, gare: row.nom_gare, x: row.x, y: row.y, trafic: row.Trafic, ville: row.Ville, ligne: row.ligne });
+CREATE (:Station {id: row.nom_clean, gare: row.nom_gare, x: row.x, y: row.y, trafic: row.Trafic, ville: row.Ville, ligne: row.ligne });
 '''
 
 with driver.session() as session:
@@ -31,22 +31,38 @@ with driver.session() as session:
 
 print('done')
  
+print('Inserting liaisons')
+
+query = '''
+LOAD CSV WITH HEADERS FROM 'https://raw.githubusercontent.com/pauldechorgnat/cool-datasets/master/ratp/liaisons.csv' AS row
+CREATE (:Liaison {start: row.start, stop: row.stop, ligne: row.ligne });
+'''
+
+with driver.session() as session:
+    print(query)
+    session.run(query)
+
+print('done')
+ 
+print('Creating liaisons relationships')
+
+# Création des relations entre stations et liaisons
 print('Creating relationships')
 
 queries = [
-    '''// Loading acting and changing the labels
-    LOAD CSV WITH HEADERS FROM 'https://raw.githubusercontent.com/pauldechorgnat/cool-datasets/master/ratp/liaisons.csv' AS row
-    MATCH (p:Station) WHERE p.ligne = row.ligne
-    CREATE (p)-[:LIGNE]->(c)
-    WITH p
-    SET p :Ligne
-    RETURN p;''',
-
+    '''
+    LOAD CSV WITH HEADERS FROM 'https://github.com/pauldechorgnat/cool-datasets/raw/master/ratp/stations.csv' AS row
+    MATCH (s:Station {id: row.nom_clean})
+    MATCH (l:Liaison {start: row.start})
+    MATCH (l1:Liaison {stop: row.stop})
+    CREATE (s)-[:LIGNE]->(l)
+    CREATE (s)-[:LIGNE]->(l1);
+    ''',
 ]
 
+# Utilisation d'une transaction pour exécuter chaque requête
 with driver.session() as session:
-    for q in queries:
-        print(q)
-        session.run(q)
-
+    for query in queries:
+        print(query)
+        session.run(query)
 print('done')
