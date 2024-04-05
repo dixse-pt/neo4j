@@ -23,9 +23,9 @@ LOAD CSV WITH HEADERS FROM 'https://github.com/pauldechorgnat/cool-datasets/raw/
 CREATE (:Station { 
     nom_gare: row.nom_gare,
     nom_clean: row.nom_clean,
-    Trafic: row.Trafic,
+    Trafic: toInteger(row.Trafic),
     Ville: row.Ville,
-    ligne: row.ligne,
+    ligne: toString(row.ligne)
     });
 '''
 
