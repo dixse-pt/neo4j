@@ -15,10 +15,14 @@ with driver.session() as session:
     session.run(query)
 
 print('done')
-#
+
 query = '''
 LOAD CSV WITH HEADERS FROM 'https://github.com/pauldechorgnat/cool-datasets/raw/master/ratp/stations.csv' AS row
 CREATE (:Station {
     ligne: row.ligne
 });
 '''
+
+with driver.session() as session:
+    print(query)
+    session.run(query)
