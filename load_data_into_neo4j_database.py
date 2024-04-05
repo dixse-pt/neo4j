@@ -16,56 +16,6 @@ with driver.session() as session:
 
 print('done')
 
-# print('Inserting stations')
-
-# query = '''
-# LOAD CSV WITH HEADERS FROM 'https://github.com/pauldechorgnat/cool-datasets/raw/master/ratp/stations.csv' AS row
-# CREATE (:Station { 
-#     nom_gare: row.nom_gare,
-#     nom_clean: row.nom_clean,
-#     Trafic: toInteger(row.Trafic),
-#     Ville: row.Ville,
-#     ligne: toString(row.ligne)
-# });
-
-# '''
-
-# with driver.session() as session:
-#     print(query)
-#     session.run(query)
-
-# print('done')
-
-# Ajout ligne par ligne, non conforme à l'exercice
-# print('Inserting ligne')
-
-# query = '''
-# LOAD CSV WITH HEADERS FROM 'https://github.com/pauldechorgnat/cool-datasets/raw/master/ratp/stations.csv' AS row
-# WITH DISTINCT row.ligne AS ligne
-# CREATE (:Ligne { ligne: toString(ligne)});
-# '''
-
-# with driver.session() as session:
-#     print(query)
-#     session.run(query)
-
-#print('done')
-
-# print('Inserting connections')
-
-# query = '''
-# LOAD CSV WITH HEADERS FROM 'https://github.com/pauldechorgnat/cool-datasets/raw/master/ratp/stations.csv' AS row
-# MATCH (station:Station {nom_gare: row.nom_gare})
-# MATCH (ligne:Ligne {ligne: toString(row.ligne)})
-# CREATE (ligne)-[:BELONGS_TO]->(station);
-# '''
-
-# with driver.session() as session:
-#     print(query)
-#     session.run(query)
-
-# print('done')
-
 query = '''
 LOAD CSV WITH HEADERS FROM 'https://github.com/pauldechorgnat/cool-datasets/raw/master/ratp/stations.csv' AS row
 CREATE (:Station {
@@ -98,16 +48,17 @@ with driver.session() as session:
 
 print('done')
 
-#Créer les relations pour les correspondances entre les lignes
+# Créer les relations pour les correspondances entre les lignes
 query = '''
 MATCH (station:Station)
 WITH station, station.nom_gare AS nom_gare, collect(station) AS stations
-CALL apoc.coll.combinations(stations, 2) YIELD value
-WITH value[0] AS station1, value[1] AS station2
-WHERE station1 <> station2
+UNWIND range(0, size(stations)-2) AS i
+UNWIND range(i+1, size(stations)-1) AS j
+WITH stations[i] AS station1, stations[j] AS station2
 CREATE (station1)-[:CORRESPONDS_TO]->(station2)
 CREATE (station2)-[:CORRESPONDS_TO]->(station1)
-RETURN count(*);'''
+RETURN count(*);
+'''
 
 with driver.session() as session:
     print(query)
