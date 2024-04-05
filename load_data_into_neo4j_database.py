@@ -49,13 +49,13 @@ with driver.session() as session:
 
 print('done')
 
-print('Creating connections')
+print('Inserting connections')
 
 query = '''
 LOAD CSV WITH HEADERS FROM 'https://github.com/pauldechorgnat/cool-datasets/raw/master/ratp/stations.csv' AS row
-MATCH (l:Ligne) WHERE l.ligne = toString(row.ligne)
-MATCH (s:Station) WHERE s.nom_gare = row.nom_gare
-CREATE (s)-[:DESSERVI_PAR]->(l);
+MATCH (station:Station {nom_gare: row.nom_gare})
+MATCH (ligne:Ligne {ligne: toString(row.ligne)})
+CREATE (station)-[:BELONGS_TO]->(ligne);
 '''
 
 with driver.session() as session:
