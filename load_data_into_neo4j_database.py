@@ -40,7 +40,8 @@ print('Inserting ligne')
 
 query = '''
 LOAD CSV WITH HEADERS FROM 'https://github.com/pauldechorgnat/cool-datasets/raw/master/ratp/stations.csv' AS row
-CREATE (:Ligne { ligne: toString(row.ligne)});
+WITH DISTINCT row.ligne AS ligne
+CREATE (:Ligne { ligne: toString(ligne)});
 '''
 
 with driver.session() as session:
