@@ -26,7 +26,8 @@ CREATE (:Station {
     Trafic: toInteger(row.Trafic),
     Ville: row.Ville,
     ligne: toString(row.ligne)
-    });
+});
+
 '''
 
 with driver.session() as session:
