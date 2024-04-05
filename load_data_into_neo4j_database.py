@@ -56,7 +56,7 @@ query = '''
 LOAD CSV WITH HEADERS FROM 'https://github.com/pauldechorgnat/cool-datasets/raw/master/ratp/stations.csv' AS row
 MATCH (station:Station {nom_gare: row.nom_gare})
 MATCH (ligne:Ligne {ligne: toString(row.ligne)})
-CREATE (station)-[:BELONGS_TO]->(ligne);
+CREATE (ligne)-[:BELONGS_TO]->(station);
 '''
 
 with driver.session() as session:
