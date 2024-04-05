@@ -19,7 +19,7 @@ print('done')
 query = '''
 LOAD CSV WITH HEADERS FROM 'https://github.com/pauldechorgnat/cool-datasets/raw/master/ratp/stations.csv' AS row
 CREATE (:Station {
-    name: row.nom_gare
+    name: row.nom_gare,
     ligne: row.ligne
 });
 '''
