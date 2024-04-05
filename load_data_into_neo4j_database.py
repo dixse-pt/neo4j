@@ -20,7 +20,13 @@ print('Inserting stations')
 
 query = '''
 LOAD CSV WITH HEADERS FROM 'https://github.com/pauldechorgnat/cool-datasets/raw/master/ratp/stations.csv' AS row
-CREATE (:Station { nom_gare: row.nom_gare });
+CREATE (:Station { 
+    nom_gare: row.nom_gare,
+    nom_clean: row.nom_clean,
+    Trafic: row.Trafic,
+    Ville: row.Ville,
+    ligne: row.ligne,
+    });
 '''
 
 with driver.session() as session:
