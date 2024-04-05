@@ -50,14 +50,11 @@ print('done')
 
 # Créer les relations pour les correspondances entre les lignes
 query = '''
-MATCH (station:Station)
-WITH station, station.nom_gare AS nom_gare, collect(station) AS stations
-UNWIND range(0, size(stations)-2) AS i
-UNWIND range(i+1, size(stations)-1) AS j
-WITH stations[i] AS station1, stations[j] AS station2
-CREATE (station1)-[:CORRESPONDS_TO]->(station2)
-CREATE (station2)-[:CORRESPONDS_TO]->(station1)
-RETURN count(*);
+MATCH (s1:Station), (s2:Station)
+WHERE s1 <> s2
+MATCH (s1)-[:CONNECTS_TO]->(:Station)<-[:CONNECTS_TO]-(s2)
+CREATE (s1)-[:CORRESPONDS_TO]->(s2)
+CREATE (s2)-[:CORRESPONDS_TO]->(s1)
 '''
 
 with driver.session() as session:
